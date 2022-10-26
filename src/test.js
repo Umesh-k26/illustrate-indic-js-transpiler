@@ -1,4 +1,5 @@
-var a = 3, b = 20;
+for(i=1;i<19;++i)
+{
 
-const c = 20;
-var d = 20+33;
+  var a =  5;
+}

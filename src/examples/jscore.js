@@ -242,7 +242,10 @@ break;
 case 215:
  this.$ = ["debuggerStmt", $$[$0] ] 
 break;
-case 218:
+case 216: case 260:
+ this.$ = null 
+break;
+case 217: case 218:
  this.$ = $$[$0-1]; 
 break;
 case 220: case 224:
@@ -294,7 +297,7 @@ case 242:
  this.$ = loopNode('while', null, null, $$[$0-2], $$[$0]) 
 break;
 case 243:
- this.$ = loopNode('while', $$[$0-6], $$[$0-4], $$[$0-2], $$[$0]) 
+ this.$ = loopNode('for', $$[$0-6], $$[$0-4], $$[$0-2], $$[$0]) 
 break;
 case 245:
  this.$ = rangeloopNode('rangeloop', $$[$0-4], $$[$0-2], $$[$0]) 
@@ -304,9 +307,6 @@ case 246:
 break;
 case 247:
  this.$ = rangeloopNode('rangeloop', newId($$[$0-5], $$[$0-4]), $$[$0-2], $$[$0]) 
-break;
-case 260:
- this.$ = null 
 break;
 case 284:
  this.$ = funcNode($$[$0-5], $$[$0-1], null) 

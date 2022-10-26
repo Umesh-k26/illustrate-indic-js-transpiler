@@ -691,8 +691,8 @@ Statement
     ;
 
 Block
-    : OPENBRACE CLOSEBRACE
-    | OPENBRACE SourceElements CLOSEBRACE 
+    : OPENBRACE CLOSEBRACE { $$ = null }
+    | OPENBRACE SourceElements CLOSEBRACE { $$ = $2; }
     ;
 
 VariableStatement
@@ -794,7 +794,7 @@ IterationStatement
     | WHILE '(' Expr ')' Statement 
 	{ $$ = loopNode('while', null, null, $Expr, $Statement) }
     | FOR '(' ExprNoInOpt SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
-	{ $$ = loopNode('while', $3, $5, $7, $9) }
+	{ $$ = loopNode('for', $3, $5, $7, $9) }
     | FOR '(' VAR VariableDeclarationListNoIn SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
     | FOR '(' LeftHandSideExpr INTOKEN Expr ')' Statement 
 	{ $$ = rangeloopNode('rangeloop', $3, $5, $7) }

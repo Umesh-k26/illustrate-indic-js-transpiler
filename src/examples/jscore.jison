@@ -1,23 +1,3 @@
-/* http://www.opensource.apple.com/source/JavaScriptCore/ */
-/* https://zditect.com/blog/31273085.html */
-/* https://stackoverflow.com/questions/26661565/adding-functions-to-bison-jison-calculator-language
-https://github.com/nolanlawson/jison-debugger 
-https://github.com/benjaminjackman/jison-typescript-compiler/blob/master/src/main/jison/js-lex.jisonlex
-https://stackoverflow.com/questions/22994440/converting-context-free-grammar-into-regular-expression
-https://www.youtube.com/watch?v=_H0TeJek3GI
-https://pegjs.org/
-https://hepunx.rl.ac.uk/~adye/jsspec11/llr.htm
-https://github.com/zaach/jison/issues/379
-https://tomassetti.me/parsing-in-javascript/
-
-Astadhyai:
-https://www.indica.today/research/paninis-grammar-computer-science/
-https://www.researchgate.net/publication/221145943_On_the_Architecture_of_Panini's_Grammar
-
-Panini: https://www.youtube.com/watch?v=b317zJ4JeZY&list=PLmozlYyYE-ERwN1bzzIDN9kvvb5Ooen_7&index=3
-https://www.youtube.com/watch?v=bxkp_fuZkks
-*/
-
 /* lexical grammar */
 %lex
 
@@ -52,6 +32,9 @@ esc \\
 "for"                           return 'FOR'
 "while"                         return 'WHILE'
 "with"                          return 'WITH'
+"if"                            return 'IF'
+"else"                            return 'ELSE'
+
 
 "switch"                        return 'SWITCH'
 "case"                        	return 'CASE'
@@ -88,6 +71,8 @@ esc \\
 
 '>>'                            return 'RSHIFT'
 '<<'                            return 'LSHIFT'
+'>>>'                            return 'URSHIFT'
+
 
 "++"                            return 'PLUSPLUS'
 "--"                            return 'MINUSMINUS'
@@ -224,6 +209,17 @@ function funcNode(identifier, body, arguments)
 		arguments: arguments
 	}
 }
+
+/* if-else node */
+function ifelseNode(exp, stmt1, stmt2)
+{
+  return {
+    exp: exp,
+    stmt1: stmt1,
+    stmt2: stmt2
+  }
+}
+
 %}
 %start Program
 
@@ -239,40 +235,6 @@ function funcNode(identifier, body, arguments)
 
 
 %%
-
-// expressions
-//     : e EOF
-//         {return $1;}
-//     ;
-
-// e
-//     : e '+' e
-//         {$$ = $1+$3;}
-//     | e '-' e
-//         {$$ = $1-$3;}
-//     | e '*' e
-//         {$$ = $1*$3;}
-//     | e '/' e
-//         {$$ = $1/$3;}
-//     | e '^' e
-//         {$$ = Math.pow($1, $3);}
-//     | e '!'
-//         {{
-//           $$ = (function fact (n) { return n==0 ? 1 : fact(n-1) * n })($1);
-//         }}
-//     | e '%'
-//         {$$ = $1/100;}
-//     | '-' e %prec UMINUS
-//         {$$ = -$2;}
-//     | '(' e ')'
-//         {$$ = $2;}
-//     | NUMBER
-//         {$$ = Number(yytext);}
-//     | E
-//         {$$ = Math.E;}
-//     | PI
-//         {$$ = Math.PI;}
-//     ;
 
 Literal
     : NULLTOKEN
@@ -309,7 +271,7 @@ PrimaryExprNoBrace
     | Literal
     | ArrayLiteral
     | IDENT
-    | '(' Expr ')'
+    | '(' Expr ')' { $$ = $2; }
     ;
 
 ArrayLiteral
@@ -336,15 +298,15 @@ Elision
 MemberExpr
     : PrimaryExpr
     | FunctionExpr
-    | MemberExpr '[' Expr ']'
-    | MemberExpr '.' IDENT
+    | MemberExpr '[' Expr ']' { $$ = expNode($1, $3, 'array_access', '['); }
+    | MemberExpr '.' IDENT { $$ = expNode($1, $3, 'object_access', '.'); }
     | NEW MemberExpr Arguments
     ;
 
 MemberExprNoBF
     : PrimaryExprNoBrace
-    | MemberExprNoBF '[' Expr ']'
-    | MemberExprNoBF '.' IDENT
+    | MemberExprNoBF '[' Expr ']' { $$ = expNode($1, $3, 'array_access', '['); }
+    | MemberExprNoBF '.' IDENT { $$ = expNode($1, $3, 'object_access', '.'); }
     | NEW MemberExpr Arguments
     ;
 
@@ -359,27 +321,27 @@ NewExprNoBF
     ;
 
 CallExpr
-    : MemberExpr Arguments
-    | CallExpr Arguments
-    | CallExpr '[' Expr ']'
-    | CallExpr '.' IDENT
+    : MemberExpr Arguments { $$ = expNode($1, $2, 'call_exp', null); }
+    | CallExpr Arguments { $$ = expNode($1, $2, 'call_exp', null); }
+    | CallExpr '[' Expr ']' { $$ = expNode( $1, $3, 'call_exp', '['); }
+    | CallExpr '.' IDENT { $$ = expNode($1, $3, 'call_exp', '.'); }
     ;
 
 CallExprNoBF
-    : MemberExprNoBF Arguments
-    | CallExprNoBF Arguments
-    | CallExprNoBF '[' Expr ']'
-    | CallExprNoBF '.' IDENT
+    : MemberExprNoBF Arguments { $$ = expNode($1, $2, 'call_exp', null); }
+    | CallExprNoBF Arguments { $$ = expNode($1, $2, 'call_exp', null); }
+    | CallExprNoBF '[' Expr ']' { $$ = expNode( $1, $3, 'call_exp', '['); }
+    | CallExprNoBF '.' IDENT { $$ = expNode($1, $3, 'call_exp', '.'); }
     ;
 
 Arguments
-    : '(' ')'
-    | '(' ArgumentList ')'
+    : '(' ')' { $$ = ['arguments', []]; }
+    | '(' ArgumentList ')' { $$ = ['arguments', $2]; }
     ;
 
 ArgumentList
-    : AssignmentExpr
-    | ArgumentList ',' AssignmentExpr
+    : AssignmentExpr { $$ = [$1]; }
+    | ArgumentList ',' AssignmentExpr { $$ = $1; $$.push($3); }
     ;
 
 LeftHandSideExpr
@@ -394,14 +356,14 @@ LeftHandSideExprNoBF
 
 PostfixExpr
     : LeftHandSideExpr
-    | LeftHandSideExpr PLUSPLUS
-    | LeftHandSideExpr MINUSMINUS
+    | LeftHandSideExpr PLUSPLUS { $$ = expNode($1, null, 'post_fix_exp', '++'); }
+    | LeftHandSideExpr MINUSMINUS { $$ = expNode($1, null, 'post_fix_exp', '--'); }
     ;
 
 PostfixExprNoBF
     : LeftHandSideExprNoBF { $$ = $1 }
-    | LeftHandSideExprNoBF PLUSPLUS { $$ = 'a'}
-    | LeftHandSideExprNoBF MINUSMINUS { $$ = 'b'}
+    | LeftHandSideExprNoBF PLUSPLUS { $$ = expNode($1, null, 'post_fix_exp', '++'); }
+    | LeftHandSideExprNoBF MINUSMINUS { $$ = expNode($1, null, 'post_fix_exp', '--'); }
     ;
 
 UnaryExprCommon
@@ -469,14 +431,14 @@ ShiftExpr
     : AdditiveExpr { $$ = $1 }
     | ShiftExpr LSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '<<') }
     | ShiftExpr RSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '>>') }
-    | ShiftExpr URSHIFT AdditiveExpr
+    | ShiftExpr URSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '>>>'); }
     ;
 
 ShiftExprNoBF
     : AdditiveExprNoBF { $$ = $1 }
     | ShiftExprNoBF LSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '<<') }
     | ShiftExprNoBF RSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '>>') }
-    | ShiftExprNoBF URSHIFT AdditiveExpr
+    | ShiftExprNoBF URSHIFT AdditiveExpr { $$ = expNode($1, $3, 'shift_exp', '>>>'); }
     ;
 
 RelationalExpr
@@ -676,8 +638,8 @@ Statement
     | ConstStatement { $$ = ["constStmt", $1 ] } // done
     | FunctionDeclaration { $$ = ["functionStmt", $1 ] } //done
     | EmptyStatement { $$ = ["emptyStmt"] } //done
-    | ExprStatement { $$ = ["exprStmt", $1 ] }
-    | IfStatement { $$ = ["ifStmt", $1 ] }
+    | ExprStatement { $$ = ["exprStmt", $1 ] } // done
+    | IfStatement { $$ = ["ifStmt", $1 ] } // done
     | IterationStatement { $$ = ["iterStmt", $1 ] } // done
     | ContinueStatement { $$ = ["continueStmt"] } //done
     | BreakStatement { $$ = ["breakStmt"] } //done
@@ -784,7 +746,9 @@ ExprStatement
 
 IfStatement
     : IF '(' Expr ')' Statement %prec IF_WITHOUT_ELSE
+    { $$ = ifelseNode($3, $5, null); }
     | IF '(' Expr ')' Statement ELSE Statement
+    { $$ = ifelseNode($3, $5, $7); }
     ;
 
 IterationStatement
@@ -796,6 +760,7 @@ IterationStatement
     | FOR '(' ExprNoInOpt SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
 	{ $$ = loopNode('for', $3, $5, $7, $9) }
     | FOR '(' VAR VariableDeclarationListNoIn SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
+  { $$ = loopNode('for', $4, $6, $8, $10); }
     | FOR '(' LeftHandSideExpr INTOKEN Expr ')' Statement 
 	{ $$ = rangeloopNode('rangeloop', $3, $5, $7) }
     | FOR '(' VAR IDENT INTOKEN Expr ')' Statement 
@@ -831,7 +796,7 @@ BreakStatement
 ReturnStatement
     : RETURN SEMICOLON { $$ = null }
     | RETURN error
-    | RETURN Expr SEMICOLON { $$ = $Expr } // pending
+    | RETURN Expr SEMICOLON { $$ = $2; }
     | RETURN Expr error
     ;
 
@@ -897,15 +862,19 @@ FunctionDeclaration
 
 FunctionExpr
     : FUNCTION '(' ')' OPENBRACE FunctionBody CLOSEBRACE
+    { $$ = funcNode(null, $FunctionBody, null) }
     | FUNCTION '(' FormalParameterList ')' OPENBRACE FunctionBody CLOSEBRACE
+    { $$ = funcNode(null, $FunctionBody, $FormalParameterList) }
     | FUNCTION IDENT '(' ')' OPENBRACE FunctionBody CLOSEBRACE
+    { $$ = funcNode($IDENT, $FunctionBody, null) }
     | FUNCTION IDENT '(' FormalParameterList ')' OPENBRACE FunctionBody CLOSEBRACE
+    { $$ = funcNode($IDENT, $FunctionBody, $FormalParameterList) }
     ;
 
 FormalParameterList
-    : IDENT { $$ = [$IDENT] }
+    : IDENT { $$ = [$1] }
     | FormalParameterList ',' IDENT
-	{ $$ = $FormalParameterList; $$.push($IDENT); }
+	{ $$ = $1; $$.push($3); }
     ;
 
 FunctionBody
@@ -919,6 +888,6 @@ Program
     ;
 
 SourceElements
-    : Statement { $$ = [$Statement]; }
-    | SourceElements Statement { $$ = $SourceElements; $$.push($Statement); }
+    : Statement { $$ = [$1]; }
+    | SourceElements Statement { $$ = $1; $$.push($2); }
     ;

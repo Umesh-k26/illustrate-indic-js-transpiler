@@ -72,12 +72,12 @@ function newId(identifier, value)
 }
 
 /* function node */
-function funcNode(identifier, body, arguments)
+function funcNode(identifier, body, args)
 {
 	return {
 		identifier: identifier,
 		body: body,
-		arguments: arguments
+		arguments: args
 	}
 }
 
@@ -504,7 +504,7 @@ ExprNoBF
     ;
 
 Statement
-    : Block { $$ = ["blockStmt", $1] } // done
+    : Block
     | VariableStatement { $$ = ["varStmt", $1 ] } //done
     | ConstStatement { $$ = ["constStmt", $1 ] } // done
     | FunctionDeclaration { $$ = ["functionStmt", $1 ] } //done

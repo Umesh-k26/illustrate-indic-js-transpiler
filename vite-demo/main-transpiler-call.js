@@ -4,7 +4,7 @@ export function transpileCode(clickElement, outputElement, codeElement, converte
   const getTranspiledOutput = () => {
     if (codeElement.value !== "") {
       const output = transpiler(codeElement.value);
-      const interpretedoutput = interpreter(output);
+      // const interpretedoutput = interpreter(output);
       convertedCodeElement.value = output
       // outputElement.innerHTML = output
     } else {

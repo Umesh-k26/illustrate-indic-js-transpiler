@@ -1,4 +1,4 @@
-**Case study on how one can adopt Jison library for creating JS based Transpilers of our own choice of  lipi/keywords/texts**
+**Case study on how one can adopt Jison library for generating JS Transpiler using the custom lipi/keywords/texts**
 ------------
 
 The idea here is we show that how one can generate JS parser for the keywords or lipi or text of your choice. Here we extend the JavaScript grammar with our own lexfile that has lipi/texts/keywords of our own choice. The grammar shipped here covers the whole JS grammar. The current shipped code generates the **AST (Abstract Syntax Tree)** before generating final JS (Transpiled) code. However the **AST** generation is only for few constructs. If you which you could extend the same for other constructs as well.

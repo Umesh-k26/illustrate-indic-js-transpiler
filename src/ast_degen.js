@@ -1,4 +1,4 @@
-export function degen(ast) {
+function degen(ast) {
   let res = "";
   if (ast) {
     ast.forEach((stmt) => {
@@ -8,19 +8,21 @@ export function degen(ast) {
   }
   return res;
 }
+module.exports = degen;
 
 function stmt_degen(stmt) {
   let res = "";
   switch (stmt[0]) {
     case "blockStmt":
-      res += "{";
-      res += degen(stmt[1]);
-      res += "}";
+      res += "{\n" + degen(stmt[1]) + "\n}";
+      break;
+
+    case "varStmt":
+      res = "var " + vardec_degen(stmt[1]) + ";";
       break;
 
     case "constStmt":
-      res += "const ";
-      res += vardec_degen(stmt[1]);
+      res = "const " + vardec_degen(stmt[1]);
       break;
 
     case "functionStmt":
@@ -30,15 +32,15 @@ function stmt_degen(stmt) {
       break;
 
     case "exprStmt":
-      res += expr_degen(stmt[1]);
+      res = exprs_degen(stmt[1]);
       break;
 
     case "ifStmt":
-      res += if_degen(stmt[1]);
+      res = if_degen(stmt[1]);
       break;
 
     case "iterStmt":
-      res += iter_degen(stmt[1]);
+      res = iter_degen(stmt[1]);
       break;
 
     case "continueStmt":
@@ -46,11 +48,11 @@ function stmt_degen(stmt) {
       break;
 
     case "breakStmt":
-      res += "break;";
+      res = "break;";
       break;
 
     case "returnStmt":
-      res += "return ";
+      res = "return ";
       if (stmt[1]) res += expr_degen(stmt[1]);
       break;
 
@@ -62,17 +64,62 @@ function stmt_degen(stmt) {
 
 function vardec_degen(arr) {
   let res = "";
-  arr.forEach((element) => {
-    res += element.identifier;
 
-    if (element.value) {
-      res = res + "=" + element.value;
-    }
-  });
+  for (let i = 0; i < arr.length; i++) {
+    res += arr[i].identifier;
+
+    if (arr[i].value) res = res + "=" + arr[i].value;
+
+    if (i < arr.length - 1) res += ", ";
+  }
   return res;
 }
+function exprs_degen(exprs) {
+  let res = '';
+  for(let i = 0;i < exprs.length; i++)
+  {
+    res += expr_degen(exprs[i]);
 
-function expr_degen(expr) {}
+    if(i < exprs.length - 1) res += ', ';
+  }
+}
+function expr_degen(expr) {
+  let res = "";
+  switch (expr.type) {
+    case "relational_exp":
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+
+    case "assign_exp":
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+
+    case "logical_exp":
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+
+    case 'ternary_exp':
+      res = expr_degen(expr.exp1) + '?' + expr_degen(expr.exp2) + ':' + expr_degen(expr.exp3);
+      break;
+    
+    case 'bitwise_exp':
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+    
+    case 'relational_exp':
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+
+    case 'shift_exp':
+      res = expr_degen(expr.left) + expr.operator + expr_degen(expr.right);
+      break;
+    
+    case 'post_fix_exp':
+      res = expr_degen()
+    default:
+      break;
+  }
+}
 
 function if_degen(node) {
   let res = "if";
@@ -119,7 +166,29 @@ function iter_degen(node) {
         stmt_degen(node.body);
       break;
 
+    case "for_var":
+      res =
+        "for" +
+        "(" +
+        "var" +
+        vardec_degen(node.init) +
+        "; " +
+        expr_degen(node.test) +
+        "; " +
+        expr_degen(node.update) +
+        ")" +
+        stmt_degen(node.body);
+      break;
+
     case "rangeloop":
+      res =
+        "for" +
+        "(" +
+        expr_degen(node.lhs) +
+        ":" +
+        expr_degen(node.rhs) +
+        ")" +
+        stmt_degen(node.body);
       break;
 
     default:

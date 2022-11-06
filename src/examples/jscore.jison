@@ -489,17 +489,17 @@ AssignmentOperator
     ;
 
 Expr
-    : AssignmentExpr { $$ = $1 }
+    : AssignmentExpr { $$ = [$1] }
     | Expr ',' AssignmentExpr { $$ = $1; $$.push($3); }
     ;
 
 ExprNoIn
-    : AssignmentExprNoIn { $$ = $1 }
+    : AssignmentExprNoIn { $$ = [$1] }
     | ExprNoIn ',' AssignmentExprNoIn { $$ = $1; $$.push($3); }
     ;
 
 ExprNoBF
-    : AssignmentExprNoBF { $$ = $1 }
+    : AssignmentExprNoBF { $$ = [$1] }
     | ExprNoBF ',' AssignmentExpr { $$ = $1; $$.push($3); }
     ;
 
@@ -631,7 +631,7 @@ IterationStatement
     | FOR '(' ExprNoInOpt SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
 	{ $$ = loopNode('for', $3, $5, $7, $9) }
     | FOR '(' VAR VariableDeclarationListNoIn SEMICOLON ExprOpt SEMICOLON ExprOpt ')' Statement 
-  { $$ = loopNode('for', $4, $6, $8, $10); }
+  { $$ = loopNode('for_var', $4, $6, $8, $10); }
     | FOR '(' LeftHandSideExpr INTOKEN Expr ')' Statement 
 	{ $$ = rangeloopNode('rangeloop', $3, $5, $7) }
     | FOR '(' VAR IDENT INTOKEN Expr ')' Statement 

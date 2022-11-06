@@ -224,6 +224,9 @@ break;
 case 176: case 178: case 180:
  this.$ = expNode($$[$0-2], $$[$0], 'assign_exp', '=') 
 break;
+case 199:
+ this.$ = ["blockStmt", $$[$0]] 
+break;
 case 200:
  this.$ = ["varStmt", $$[$0] ] 
 break;

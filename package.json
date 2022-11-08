@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "Umesh Kalvakuntla",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "jison-lex": "^0.3.4",
+    "moo": "^0.5.2"
+  }
 }

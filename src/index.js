@@ -1,36 +1,40 @@
-const moo = require("moo");
 const fs = require("fs");
-const lang = require("./languages");
+const argv = require("minimist")(process.argv.slice(2));
+const transpiler = require("./transpiler");
 
-const hindiMap = lang.hindi.keywords;
-
-let lexer = moo.compile({
-  WS: /[ \t]+/,
-  comment: /\/\/.*?$/,
-  number: /0|[1-9][0-9]*/,
-  IDEN: {
-    match: /[a-zA-Z\u0900-\u097F]+/,
-    type: moo.keywords({
-      KW: Object.keys(hindiMap),
-    }),
-  },
-  SPACE: { match: /\s+/, lineBreaks: true },
-  operators: lang.operators,
-});
-
-
-fs.readFile("test.js", (err, data) => {
-  data = data.toString("utf-8");
-  lexer.reset(data)
-  let token;
-  let output = '';
-  while ((token = lexer.next())) {
-    // console.log(token)
-    if(token.type == 'KW')
-    {
-      output += hindiMap[token.value]
-    }
-    else output += token.value;
+async function main() {
+  if (!argv["f"]) {
+    throw new Error("No input file provided");
   }
-  console.log(output)
-});
+
+  if (!argv["l"]) {
+    throw new Error("Language not specified");
+  }
+  let inputFile = argv["f"] + ".js";
+  let outputFile = (argv["o"] ? argv["o"] : argv["f"] + "-output") + ".js";
+  let language = argv["l"];
+
+  fs.readFile(inputFile, "utf8", (err, data) => {
+    if (err) throw err;
+    let output = transpiler(language, data);
+    fs.writeFile(outputFile, output, (err) => {
+      if (err) throw err;
+      console.log(`Output writtten into ${outputFile}`);
+    });
+  });
+
+  // Ast function call
+  if (argv["a"]) {
+    console.log("Need to implement ast call ...");
+  }
+}
+
+main();
+
+/* 
+Usage:
+-f : input file name
+-o : output file name
+-l : language
+-a : to print ast or not
+*/

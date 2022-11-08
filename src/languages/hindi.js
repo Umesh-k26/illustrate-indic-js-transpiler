@@ -32,6 +32,12 @@ const keywords = {
   /* INBUILT FUNCTIONS */
   वद्: "console.log",
 };
+
+const regexStart = '\u0900'
+const regexEnd = '\u097F'
+
 module.exports = {
   keywords: keywords,
+  regexStart: regexStart,
+  regexEnd: regexEnd
 };

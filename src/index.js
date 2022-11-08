@@ -1,6 +1,7 @@
 const fs = require("fs");
 const argv = require("minimist")(process.argv.slice(2));
 const transpiler = require("./transpiler");
+const astGenerator = require("./ast_gen");
 
 async function main() {
   if (!argv["f"]) {
@@ -25,7 +26,8 @@ async function main() {
 
   // Ast function call
   if (argv["a"]) {
-    console.log("Need to implement ast call ...");
+    // console.log("Need to implement ast call ...");
+    astGenerator();
   }
 }
 

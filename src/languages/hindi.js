@@ -33,11 +33,47 @@ const keywords = {
   वद्: "console.log",
 };
 
+const keywords_rev = {
+  null: "शून्",
+  true: "सत्",
+  false: "असत्",
+  this: "यह",
+  void: "रिक्त",
+  delete: "मिटाना",
+  typeof: "प्रकार",
+  new: "नया",
+  var: "मान",
+  let: "होने",
+  const: "लगातार",
+  do: "करना",
+  for: "चक्रम",
+  while: "पर्यन्तम",
+  with: "साथ",
+  if: "यदि",
+  else: "अथ",
+  switch: "निर्देश",
+  case: "यद",
+  default: "यदभावे",
+  throw: "फेंकना",
+  try: "प्रयत्",
+  catch: "पकड",
+  finally: "आखिरकार",
+  continue: "जारी_रखें",
+  break: "विराम",
+  return: "फल",
+  function: "सूत्",
+  debugger: "डिबगर",
+
+  /* INBUILT FUNCTIONS */
+  "console.log": "वद्",
+};
+
 const regexStart = '\u0900'
 const regexEnd = '\u097F'
 
 module.exports = {
   keywords: keywords,
   regexStart: regexStart,
-  regexEnd: regexEnd
+  regexEnd: regexEnd,
+  keywords_rev: keywords_rev
 };

@@ -2,7 +2,7 @@ const exec = require("child_process").exec;
 
 const Parser = require("jison").Parser;
 const { stderr } = require("process");
-const lexRules = require("./lex-rules");
+const lexRules = require("./lex_rules");
 
 const astGenerator = async (language, data) => {
   // let grammar = {

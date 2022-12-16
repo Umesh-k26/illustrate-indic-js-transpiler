@@ -1,32 +1,34 @@
 const moo = require("moo");
+const Tinytim = require("tinytim");
+const fs = require("fs");
+const JisonLex = require("jison-lex");
+const execSync = require("child_process").execSync;
+
 const Languages = require("./languages");
-const JisonLex = require('jison-lex');
-const execSync = require('child_process').execSync;
-const parser = require('./examples/jscore.js');
-// const Parser = require("jison").Parser;
-const Tinytim = require('tinytim');
+const appDir = require("./appDir");
 
 const transpiler = (language, data) => {
   const languageObj = Languages[language];
-  const grammar = Tinytim.renderFile("./languages/template.l", languageObj.keywords_rev);
-  console.log("********* " + grammar + " *********");
-  
+  const grammar = Tinytim.renderFile(
+    appDir + "/src/languages/template.l",
+    languageObj.keywords_rev
+  );
+
   let jisonlex = new JisonLex(grammar);
   jisonlex.setInput(data);
 
-  // TODO creating a jscore file
+  let jisonFilePath = `${appDir}/src/jscore.jison`;
 
-  // jison jscore.jison hindi_js.l -o jscore.js
-  // let parser = new Parser(grammar);
-  // exec('jison jscore.jison hindi_js.l -o ./examples/jscore.js', { encoding: 'utf-8' }); 
+  const buildDir = "build";
+  let lexFilePath = `${appDir}/${buildDir}/lexer.l`;
+  let parserPath = `${appDir}/${buildDir}/parser.js`;
 
-  // execSync('echo '+ grammar + ' > ./examples/output-grammar.l', { encoding: 'utf-8' });
-  // let out = console.log(execSync('echo ' + '"' + grammar + '"' + ' > ./examples/output-grammar.l', { encoding: 'utf-8' }))
-  // execSync('jison ./examples/jscore.jison ./examples/output-grammar.l -o ./examples/jscore.js', { encoding: 'utf-8' });
+  if (!fs.existsSync(buildDir)) {
+    fs.mkdirSync(buildDir);
+  }
 
-  parser.lexer = jisonlex;
-  ast = parser.parse(data);
-  console.log("AST:\n"+ JSON.stringify(ast));
+  fs.writeFileSync(lexFilePath, grammar);
+  execSync(`jison "${jisonFilePath}" "${lexFilePath}" -o "${parserPath}"`);
 
   let lexer = moo.compile({
     WS: /[ \t]+/,

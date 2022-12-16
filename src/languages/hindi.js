@@ -34,9 +34,9 @@ const keywords = {
 };
 
 const keywords_rev = {
-  null: "शून्",
-  true: "सत्",
-  false: "असत्",
+  null: "शून्य",
+  true: "सत्य",
+  false: "असत्य",
   this: "यह",
   void: "रिक्त",
   delete: "मिटाना",
@@ -46,8 +46,8 @@ const keywords_rev = {
   let: "होने",
   const: "लगातार",
   do: "करना",
-  for: "चक्रम",
-  while: "पर्यन्तम",
+  for: "चक्रम्",
+  while: "पर्यन्तम्",
   with: "साथ",
   if: "यदि",
   else: "अथ",
@@ -55,13 +55,13 @@ const keywords_rev = {
   case: "यद",
   default: "यदभावे",
   throw: "फेंकना",
-  try: "प्रयत्",
-  catch: "पकड",
+  try: "प्रयत्न",
+  catch: "पकड़",
   finally: "आखिरकार",
   continue: "जारी_रखें",
-  break: "विराम",
+  break: "विराम्",
   return: "फल",
-  function: "सूत्",
+  function: "सूत्र",
   debugger: "डिबगर",
 
   /* INBUILT FUNCTIONS */

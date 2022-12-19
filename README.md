@@ -43,10 +43,10 @@ The output of the above command would generates a regular JS file (output_sample
 **The output of the above command would generate a regular JS file (output_sample.js)**
 
 **Command Usage:**
-> **-f : input file name
-> -o : output file name
-> -l : language
-> -a : to print/generate ast**
+> -f : input file name </br>
+> -o : output file name </br>
+> -l : language </br>
+> -a : to print/generate ast </br>
 
 (D) Generate AST
 -----------------------

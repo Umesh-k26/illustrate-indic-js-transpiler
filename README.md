@@ -59,6 +59,10 @@ eg: node index.js -f sample.js -l hindi -a
 > **[["varStmt",[{"identifier":"j","value":1}]],["varStmt",[{"identifier":"i","value":0}]],["iterStmt",{"type":"for_var","init":[{"identifier":"i","value":1}],"update":[{"type":"relational_exp","left":"i","right":20,"operator":"<"}],"test":[{"type":"post_fix_exp","left":"i","right":null,"operator":"++"}],"body":["blockStmt",[[
 "exprStmt",[{"type":"call_exp","left":"वद्","right":["arguments",[{"type":"logical_exp","left":2,"right":2,"operator":"+"}]],"operator":null}]],["varStmt",[{"identifier":"j","value":0}]],["exprStmt",[{"type":"call_exp","left":"वद्","right":["arguments",["j"]],"operator":null}]]]]}]]**
 
+                                                     Transpiled code & AST
+
+<img width="1697" alt="Screenshot 2022-12-19 at 8 05 57 PM" src="https://user-images.githubusercontent.com/8567548/208450107-40788013-bca6-42ac-ac2f-7b446813d8c0.png">
+
 (E) Generate Parser (JavaScript)
 -----------------------------------
  Generate Parser for the javascript (sample.js). ***Refer:*** src/lexer-examples/ for the sample lex files (*.l).

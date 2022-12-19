@@ -4,11 +4,16 @@ const fs = require("fs");
 const JisonLex = require("jison-lex");
 const execSync = require("child_process").execSync;
 
-const Languages = require("./languages");
+const operators = require("./languages/operators");
 const appDir = require("./appDir");
 
 const transpiler = (language, data) => {
-  const languageObj = Languages[language];
+  let languageObj = null;
+  try {
+    languageObj = require(`./languages/${language}`)
+  } catch (error) {
+    throw "Unable to find the specified language";
+  }
   const grammar = Tinytim.renderFile(
     appDir + "/src/languages/template.l",
     languageObj.keywords_rev
@@ -43,7 +48,7 @@ const transpiler = (language, data) => {
       }),
     },
     SPACE: { match: /\s+/, lineBreaks: true },
-    operators: Languages.operators,
+    operators: operators,
   });
 
   let output = "";

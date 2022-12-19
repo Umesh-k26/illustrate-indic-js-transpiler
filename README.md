@@ -68,5 +68,5 @@ Usage: jison [file] [lexfile] [options]
 file        file containing a grammar
 lexfile     file containing a lexical grammar
 
-eg: jison jscore.jison lexer-examples/hindi_js.l -o parser.js
+eg: jison src/jscore.jison src/lexer-examples/hindi_js.l -o build/parser.js
 ```

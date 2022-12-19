@@ -20,7 +20,7 @@ async function main() {
     console.log(usage);
     throw new Error("Language not specified");
   }
-  let inputFile = appDir + "/tests/" + argv["f"];
+  let inputFile = appDir + "/samples/" + argv["f"];
   let outputFile = argv["o"] ? argv["o"] : "output_" + argv["f"];
   outputFile = appDir + "/build/" + outputFile;
   let language = argv["l"];

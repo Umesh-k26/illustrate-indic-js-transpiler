@@ -755,7 +755,7 @@ FunctionBody
 
 Program
     : 
-    | SourceElements EOF { return $SourceElements; }
+    | SourceElements EOF { console.log(JSON.stringify($SourceElements)); return $SourceElements; }
     ;
 
 SourceElements

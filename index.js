@@ -37,7 +37,8 @@ async function main() {
     if (argv["a"]) {
       let parserPath = `${appDir}/${buildDir}/parser.js`;
       let astPath = `${appDir}/${buildDir}/ast.json`;
-      const res = execSync(`node "${parserPath}" "${inputFile}"`).toString('utf-8');
+      const res = execSync(`node "${parserPath}" "${inputFile}"`);
+      // console.log(res.toString('utf-8'));
       fs.writeFileSync(astPath, res);
     }
   });

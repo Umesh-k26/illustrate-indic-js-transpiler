@@ -1,5 +1,5 @@
 
-id [\u0900-\u097Fa-zA-Z][\u0900-\u097Fa-zA-Z0-9]*
+id [{{regexStart}}-{{regexEnd}}a-zA-Z][{{regexStart}}-{{regexEnd}}a-zA-Z0-9]*
 digit [0-9]
 EXP	([Ee][-+]?[0-9]+)
 \s*

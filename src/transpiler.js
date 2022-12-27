@@ -16,7 +16,12 @@ const transpiler = (language, data) => {
   }
   const grammar = Tinytim.renderFile(
     appDir + "/src/languages/template.l",
-    languageObj.keywords_rev
+    {
+      regexStart: languageObj.regexStart,
+      regexEnd: languageObj.regexEnd,
+      ...languageObj.keywords_rev
+
+    }
   );
 
   let jisonlex = new JisonLex(grammar);
@@ -25,8 +30,8 @@ const transpiler = (language, data) => {
   let jisonFilePath = `${appDir}/src/jscore.jison`;
 
   const buildDir = "build";
-  let lexFilePath = `${appDir}/${buildDir}/lexer.l`;
-  let parserPath = `${appDir}/${buildDir}/parser.js`;
+  let lexFilePath = `${appDir}/${buildDir}/${language}_lexer.l`;
+  let parserPath = `${appDir}/${buildDir}/${language}_parser.js`;
 
   if (!fs.existsSync(buildDir)) {
     fs.mkdirSync(buildDir);

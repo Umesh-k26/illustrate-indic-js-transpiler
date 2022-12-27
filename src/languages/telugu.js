@@ -1,40 +1,40 @@
 const keywords = {
   शून्य: "null",
-  सत्य: "true",
-  असत्य: "false",
+  నిజం: "true",
+  తప్పుడు: "false",
   यह: "this",
   रिक्त: "void",
   मिटाना: "delete",
   प्रकार: "typeof",
   नया: "new",
-  मान: "var",
+  విలువ: "var",
   होने: "let",
   लगातार: "const",
   करना: "do",
-  चक्रम्: "for",
-  पर्यन्तम्: "while",
+  చక్రం: "for",
+  పర్యంతం: "while",
   साथ: "with",
-  यदि: "if",
-  अथ: "else",
-  निर्देश: "switch",
-  यद: "case",
-  यदभावे: "default",
+  ఉంటే: "if",
+  లేకపోతే: "else",
+  మారండి: "switch",
+  కేసు: "case",
+  ఈలోగా: "default",
   फेंकना: "throw",
   प्रयत्न: "try",
   पकड़: "catch",
   आखिरकार: "finally",
   जारी_रखें: "continue",
-  विराम्: "break",
-  फल: "return",
-  सूत्र: "function",
+  విరామం: "break",
+  ఫలితం: "return",
+  ఫార్ములా: "function",
   डिबगर: "debugger",
 
   /* INBUILT FUNCTIONS */
-  वद्: "console.log",
+  ముద్రణ: "console.log",
 };
 
-const regexStart = "\u0900";
-const regexEnd = "\u097F";
+const regexStart = "\u0C00";
+const regexEnd = "\u0C7F";
 
 /* ***************************
  * 

@@ -35,8 +35,8 @@ async function main() {
 
     // Ast function call
     if (argv["a"]) {
-      let parserPath = `${appDir}/${buildDir}/parser.js`;
-      let astPath = `${appDir}/${buildDir}/ast.json`;
+      let parserPath = `${appDir}/${buildDir}/${language}_parser.js`;
+      let astPath = `${appDir}/${buildDir}/ast_${argv["f"].split('.')[0]}.json`;
       const res = execSync(`node "${parserPath}" "${inputFile}"`);
       // console.log(res.toString('utf-8'));
       fs.writeFileSync(astPath, res);

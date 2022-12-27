@@ -3,9 +3,9 @@ const argv = require("minimist")(process.argv.slice(2));
 const fs = require("fs");
 const execSync = require("child_process").execSync;
 
-
 const transpiler = require("./src/transpiler");
 const appDir = require("./src/appDir");
+const buildDir = "build";
 
 const usage =
   "Usage:\n-f : input file name\n-o : output file name\n-l : language\n-a : to print ast or not\n";
@@ -35,8 +35,10 @@ async function main() {
 
     // Ast function call
     if (argv["a"]) {
-      let parserPath = appDir + "/build/parser.js";
-      execSync(`node "${parserPath}" ${inputFile}`, { stdio: "inherit" });
+      let parserPath = `${appDir}/${buildDir}/parser.js`;
+      let astPath = `${appDir}/${buildDir}/ast.json`;
+      const res = execSync(`node "${parserPath}" "${inputFile}"`).toString('utf-8');
+      fs.writeFileSync(astPath, res);
     }
   });
 }
